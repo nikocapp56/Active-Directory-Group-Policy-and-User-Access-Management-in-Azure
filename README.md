@@ -15,25 +15,30 @@ This project demonstrates setting up the foundational infrastructure required fo
 - Group Policy Management
 - Command Line
 
-<h2> Prerequisites </h2>
-
-  - [Active Directory Infrastructure Setup in Azure](https://github.com/nikocapp56/Active-Directory-Infrastructure-Setup-in-Azure)
-  - [Active Directory Deployment in Azure](https://github.com/nikocapp56/Active-Directory-Deployment-in-Azure)
-
 <h2> Operating Systems Used </h2>
 
 - Windows Server 2022 Datacenter: Azure Edition - x64 Gen2
 - Windows 10 Pro, version 22H2 - x64 Gen2
 
+<h2> Prerequisites </h2>
+
+- [Active Directory Infrastructure Setup in Azure](https://github.com/nikocapp56/Active-Directory-Infrastructure-Setup-in-Azure)
+- [Active Directory Deployment in Azure](https://github.com/nikocapp56/Active-Directory-Deployment-in-Azure)
+
+
 <h2>Deployment and Configuration Steps</h2>
 
-<h3>0️⃣ Overview of Azure Resources </h3>
+<h3> 0️⃣ Overview of Azure Resources </h3>
 
-<h3>1️⃣ Open Remote Desktop Connection and log into DC as mydomain.com\jane_admin.</h3>
+<h3> 1️⃣ Open Group Policy Management and Edit Default Domain Policy </h3>
 
+Open Remote Desktop Connection and log into DC as mydomain.com\jane_admin.
 <img width="806" height="271" alt="RDC-jane-domain-dc-1" src="https://github.com/user-attachments/assets/48a441db-25a2-490e-b528-f9a767c4ae7c" />
 
-<h3> 2️⃣ Create Virtual Network </h3>
+<img width="813" height="544.5" alt="1" src="https://github.com/user-attachments/assets/869ed19c-e9c0-44c4-8875-7a6a05563957" />
+
+<h3> 2️⃣  </h3>
+
 
 <p> Go to the Azure Portal and navigate to Virtual Networks. </p>
 <p> Click + Create, and create a virtual network. </p>
