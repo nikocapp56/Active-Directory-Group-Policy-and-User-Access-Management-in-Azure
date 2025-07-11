@@ -116,9 +116,8 @@ Open Event Viewer.
 
 Windows Logs > Security
 
-Right-click on "Security" in Event Viewer and click "Find", you can search for the username.
+To search for the username, right-click on "Security" and click "Find"
 
-This log records security-related events, including successful and failed logon attempts, account lockouts, and changes to user accounts.
-Reviewing these logs is essential for auditing and tracking authentication activity across the domain.
+This log records security-related events, including successful and failed logon attempts, account lockouts, and changes to user accounts. Reviewing these logs is essential for auditing and tracking authentication activity across the domain.
 
 <img width="1280" height="769" alt="11" src="https://github.com/user-attachments/assets/c4abf921-05bf-4987-90f2-c99186fd44df" />
