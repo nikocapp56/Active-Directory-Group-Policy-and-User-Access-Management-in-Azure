@@ -1,19 +1,26 @@
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/96f87482-0053-4788-8888-aa93a4400811" />
+<img src="https://i.imgur.com/pU5A58S.png" alt="Microsoft Active Directory Logo"/>
 
 </p>
 
-<h1>Group Policy and User Access Management in Azure</h1>
+<h1>Active Directory Group Policy and User Access Management in Azure</h1>
 This project demonstrates setting up the foundational infrastructure required for an Active Directory environment in the cloud using Microsoft Azure by deploying a Windows Server 2022 virtual machine as a Domain Controller and a Windows 10 machine as a client. The Domain Controller is configured with a static private IP and serves as the internal DNS server, while the client is set to use the Domain Controller for all DNS queries. This setup establishes secure communication, validates connectivity, and prepares the environment for future domain deployment and user access management.
 
 <h2>Environments and Technologies Used</h2>
 
 - Microsoft Azure (Virtual Machines/Compute)
 - Remote Desktop Connection
-- Windows PowerShell
+- Active Directory Domain Services
+- Group Policy Management
+- Command Line
 
-<h2>Operating Systems Used </h2>
+<h2> Prerequisites </h2>
+
+  - [Active Directory Infrastructure Setup in Azure](https://github.com/nikocapp56/Active-Directory-Infrastructure-Setup-in-Azure)
+  - [Active Directory Deployment in Azure](https://github.com/nikocapp56/Active-Directory-Deployment-in-Azure)
+
+<h2> Operating Systems Used </h2>
 
 - Windows Server 2022 Datacenter: Azure Edition - x64 Gen2
 - Windows 10 Pro, version 22H2 - x64 Gen2
@@ -22,22 +29,9 @@ This project demonstrates setting up the foundational infrastructure required fo
 
 <h3>0️⃣ Overview of Azure Resources </h3>
 
-We will create and work with the following resources in Microsoft Azure:
-- Virtual Machines:
-  - one for the domain controller (dc-1 running Windows Server 2022)
-  - one for the client machine (client-1 running Windows 10)
-- Resource Groups: To organize and manage related resources.
-- Virtual Networks: To allow secure communication between the virtual machines. 
+<h3>1️⃣ Open Remote Desktop Connection and log into DC as mydomain.com\jane_admin.</h3>
 
-By the end, your Azure portal should look similar to this: 
-
-<img width="801" alt="azure" src="https://github.com/user-attachments/assets/f81c6800-45ef-4c8d-be3c-1f2bde5a0e9c" /> 
-
-<h3>1️⃣ Create Resource Group</h3>
-<p> Go to the Azure Portal and navigate to Resource Groups. </p>
-<p> Click + Create, and create a resource group. </p>
-
-<img width="539" alt="resourcegroup" src="https://github.com/user-attachments/assets/fe39fb40-c24b-4cd9-898c-d6225b75d3cd" />
+<img width="806" height="271" alt="RDC-jane-domain-dc-1" src="https://github.com/user-attachments/assets/48a441db-25a2-490e-b528-f9a767c4ae7c" />
 
 <h3> 2️⃣ Create Virtual Network </h3>
 
