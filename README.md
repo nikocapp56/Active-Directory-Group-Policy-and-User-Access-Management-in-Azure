@@ -5,9 +5,9 @@
 </p>
 
 <h1>Active Directory Group Policy and User Access Management in Azure</h1>
-This project demonstrates setting up the foundational infrastructure required for an Active Directory environment in the cloud using Microsoft Azure by deploying a Windows Server 2022 virtual machine as a Domain Controller and a Windows 10 machine as a client. The Domain Controller is configured with a static private IP and serves as the internal DNS server, while the client is set to use the Domain Controller for all DNS queries. This setup establishes secure communication, validates connectivity, and prepares the environment for future domain deployment and user access management.
+This project demonstrates how to extend an Active Directory environment hosted in Microsoft Azure by implementing Group Policy and managing user access controls. Using Azure-based virtual machines, domain-wide security policies are enforced through Group Policy. User management tasks, such as unlocking accounts, resetting passwords, and enabling/disabling accounts, are performed through Active Directory Users and Computers. Event Viewer is utilized to audit authentication activities, like logon attempts and account lockouts, and ensure robust oversight of domain security. This setup provides a strong foundation for understanding account security in a real-world environment and establishes the groundwork for more advanced user and group policy administration.
 
-<h2>Environments and Technologies Used</h2>
+<h2> Environments and Technologies Used </h2>
 
 - Microsoft Azure (Virtual Machines/Compute)
 - Remote Desktop Connection
@@ -25,126 +25,100 @@ This project demonstrates setting up the foundational infrastructure required fo
 - [Active Directory Infrastructure Setup in Azure](https://github.com/nikocapp56/Active-Directory-Infrastructure-Setup-in-Azure)
 - [Active Directory Deployment in Azure](https://github.com/nikocapp56/Active-Directory-Deployment-in-Azure)
 
-
 <h2>Deployment and Configuration Steps</h2>
 
-<h3> 0️⃣ Overview of Azure Resources </h3>
+<h3> 0️⃣ Overview of User Access Management </h3>
+
+In this walkthrough, we will:
+
+- Use Group Policy Management, which allows centralized management of user and computer settings across the domain, to configure account lockout policies under the Default Domain Policy.
+- Force Group Policy updates on the Client VM, ensuring policies apply immediately across the domain.
+- Simulate failed logins to trigger account lockouts, demonstrating the effectiveness of our security configuration.
+- Manage user accounts in Active Directory Users and Computers by unlocking locked accounts and performing common administrative tasks like resetting passwords and disabling accounts.
+- Review security logs in Event Viewer to track logon events and account activities for auditing and compliance.
 
 <h3> 1️⃣ Open Group Policy Management and Edit Default Domain Policy </h3>
 
 Open Remote Desktop Connection and log into DC as mydomain.com\jane_admin.
 <img width="806" height="271" alt="RDC-jane-domain-dc-1" src="https://github.com/user-attachments/assets/48a441db-25a2-490e-b528-f9a767c4ae7c" />
 
+Open Group Policy Management. Right-click on Default Domain Policy and click Edit.
+
 <img width="813" height="544.5" alt="1" src="https://github.com/user-attachments/assets/869ed19c-e9c0-44c4-8875-7a6a05563957" />
 
-<h3> 2️⃣  </h3>
+<h3> 2️⃣ Configure Account Lockout Policy </h3>
 
+Computer Configuration -> Policies -> Windows Settings -> Security Settings -> Account Policies -> Account Lockout Policy
 
-<p> Go to the Azure Portal and navigate to Virtual Networks. </p>
-<p> Click + Create, and create a virtual network. </p>
+<img width="719" height="403" alt="2" src="https://github.com/user-attachments/assets/2e754b54-e414-4170-bef9-6ae533a87625" />
 
-<img width="557" alt="vnet" src="https://github.com/user-attachments/assets/23e03380-e422-4080-85b6-0c52e51fc28f" />
+Set Account lockout threshold to the number of invalid logon attempts you want.
 
-<h3> 3️⃣ Create Client VM </h3>
+Check Define this policy setting, which activates the policy and adjusts related settings to suggested values.
 
-<p>In an Active Directory environment, a client machine is needed to later join to the domain, test authentication, and demonstrate communication with the Domain Controller.</p>
-Create a Virtual Machine with the following configuration:
+<img width="450" height="500" alt="4" src="https://github.com/user-attachments/assets/0181fa74-df3a-459f-8896-a9c06b811bac" />
+</p>
+The settings will now be reflected under the Default Domain Policy Settings.
+</p>
+<img width="650" alt="5" src="https://github.com/user-attachments/assets/d06b736c-aa27-4c8c-822f-e3a1b39e23a7" />
 
-- Resource Group: Choose the Resource Group we created earlier
-- Name: set to your choice 
-- Image: Windows 10 Pro, version 22H2
-- Size: 2 vCPUs, 8 GiB memory
-- Username/Password: set to your choice 
-- Licensing: Check the box to confirm Windows licensing
-- Network: Choose the Virtual Network we created earlier
+<h3> 3️⃣ Update Group Policy on the Client </h3>
 
-Click Review + Create, then Create.
+Group Policy refreshes automatically every ~90 minutes.
 
-<img width="454" alt="client-1" src="https://github.com/user-attachments/assets/ccb69a2a-feaa-498b-85ab-29d5cd941232" />
+To force it immediately:
 
-<img width="475" alt="vmsize,password,licensing" src="https://github.com/user-attachments/assets/d5637f58-db61-47a7-adc8-29ce88bf8d13" />
+Log into client-1 as mydomain.com\jane_admin.
 
-<h3> 4️⃣ Create Domain Controller VM </h3>
-<p>In an Active Directory environment, the Domain Controller (DC) also serves as the DNS server, handling all internal name resolution needed for domain authentication and resource access.</p>
-Create a new Virtual Machine with the following configuration:
+<img width="802" height="272" alt="RDC-jane-domain-client-1" src="https://github.com/user-attachments/assets/dc0fa83a-a05b-4b91-b73a-196f7513e66d" />
 
-- Resource Group: Choose the Resource Group we created earlier
-- Name: set to your choice 
-- Image: Windows Server 2022 Datacenter
-- Size: 2 vCPUs, 8 GiB memory
-- Username/Password: Use the same username/password as before.
-- Virtual Network: Choose the Virtual Network we created earlier
+Open Command Prompt as Administrator. 
 
-Click Review + Create, then Create.
+<img width="350" alt="6" src="https://github.com/user-attachments/assets/a04c6d70-f99f-4c51-b36b-1570c96904f5" />
 
-<img width="457" alt="dc-1" src="https://github.com/user-attachments/assets/b60ef10f-8580-45a2-ad27-1d0e797c7ff8" />
+Run gpresult /r
+</p>
+This displays the resultant set of policies applied to the user and computer, confirming that your new lockout policy is active.
+</p>
+<img width="500" alt="7" src="https://github.com/user-attachments/assets/dcc8c45e-328b-43f9-84e2-663328b0bec8" />
 
-<h3> 5️⃣ Set Domain Controller's NIC Private IP address to static </h3>
+<h3> 4️⃣ Test Account Lockout </h3>
 
-When configuring a DC, it’s essential that its IP address remains constant so that all domain-joined devices can reliably find it for authentication, DNS, and other directory services. 
+Try logging into Client as one of your domain users with the wrong password more times than your lockout threshold.
 
-This is critical because if the DC’s IP changes, clients relying on it for DNS and domain services would fail to locate it.
+There should be a message saying the account has been locked due to too many failed logon attempts.
 
-Virtual Machine -> DC VM -> Network Settings -> Network Interface/IP Configuration
+<img width="1000" alt="8" src="https://github.com/user-attachments/assets/5906b097-010a-4b12-bb87-d00e9039b4bb" />
 
-Change Private IP address settings from Dynamic to Static.
+<h3> 5️⃣ Unlock the User Account </h3>
 
-Click Save.
+Return to DC as mydomain.com\jane_admin.
 
-<img width="622" alt="dc-1static" src="https://github.com/user-attachments/assets/f5c7c345-c953-45e0-9470-95ac16c70518" />
+<img width="806" height="271" alt="RDC-jane-domain-dc-1" src="https://github.com/user-attachments/assets/18c317ce-ddb0-4a5d-97bb-de6fd0da82db" />
 
-<h3> 6️⃣ Set Client's DNS settings to Domain Controller's Private IP address </h3>
+Open Active Directory Users and Computers.
 
-This ensures that the Client directs all domain-related queries to the Domain Controller. 
+<img width="400" alt="18" src="https://github.com/user-attachments/assets/56105a1e-5981-41a4-a721-eb6593453f33" />
 
-This is necessary so that when the Client later attempts to join the domain, it can correctly locate the domain controller using DNS.
+Navigate to _EMPLOYEES, find the locked user.
 
-Virtual Machine -> Client VM -> Network Settings -> Network Interface/IP Configuration -> DNS Servers
+Double-click their name, go to the Account tab, and check Unlock account.
 
-Select Custom, and enter DC's private IP address.
+<img width="650" alt="9" src="https://github.com/user-attachments/assets/725a770a-2644-48cc-9ca6-d058dabdc99a" />
 
-Click Save.
+Within Active Directory Users and Computers, passwords can be reset and user accounts can be enabled/disabled.
 
-<img width="530" alt="client-1dnsserver" src="https://github.com/user-attachments/assets/4b613a8d-545f-480e-92b2-9780598352fd" />
+<img width="412" height="533" alt="10" src="https://github.com/user-attachments/assets/e31c120e-22f1-4b2b-9eb9-b48afc634ded" />
 
-<h3> 7️⃣ Restart Client VM </h3>
+<h3> 6️⃣ Observe Event Viewer Logs </h3>
 
-<img width="818" alt="client-1restart" src="https://github.com/user-attachments/assets/affe18e4-5e96-4acb-8801-271db9f81adc" />
+Open Event Viewer.
 
-<h3> 8️⃣ Login to Domain Controller VM </h3>
+Windows Logs > Security
 
-Open Remote Desktop Connection.
+Right-click on "Security" in Event Viewer and click "Find", you can search for the username.
 
-Enter DC’s public IP address and log in using the username/password you set before.
+This log records security-related events, including successful and failed logon attempts, account lockouts, and changes to user accounts.
+Reviewing these logs is essential for auditing and tracking authentication activity across the domain.
 
-<img width="807" alt="RDC-dc-1" src="https://github.com/user-attachments/assets/3ae1e24f-31ff-4da4-a332-04beb9d23077" />
-
-<h3> 9️⃣ Disable Firewall (for testing connectivity) </h3>
-
-Inside the DC VM, open Windows Defender Firewall with Advanced Security.
-
-Click Windows Defender Firewall Properties.
-
-For each profile (Domain, Private, Public), set Firewall state: Off
-
-<img width="782" alt="firewalloff" src="https://github.com/user-attachments/assets/41578574-1bb8-40d8-a212-bf55b87fa839" />
-
-<h3> 🔟 Login to Client VM </h3>
-
-Open Remote Desktop Connection.
-
-Enter Client’s public IP address and log in using the username/password you set before.
-
-<img width="806" alt="RDC-client-1" src="https://github.com/user-attachments/assets/1d221b42-b5d9-4b76-bfcf-542027fcd485" />
-
-<h3> 1️⃣1️⃣ Attempt to ping DC's private IP address (to ensure network connectivity)</h3>
-
-Inside the Client VM, open Windows Powershell.
-
-Ping DC's private IP address.
-
-Run ipconfig /all
-
-The output for the DNS settings should display DC’s private IP address, confirming that the client is using the Domain Controller for name resolution.
-
-<img width="610" alt="powershell" src="https://github.com/user-attachments/assets/8cc2bbcc-4fa3-46a3-9bdb-0694ed83e82a" />
+<img width="1280" height="769" alt="11" src="https://github.com/user-attachments/assets/c4abf921-05bf-4987-90f2-c99186fd44df" />
